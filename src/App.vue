@@ -5,7 +5,7 @@ import RichTable from "./components/RichTable.vue";
 </script>
 
 <template>
-  <RichTable msg="Hello Vue 3 + Vite" />
+  <RichTable />
 </template>
 
 <style>

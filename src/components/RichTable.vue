@@ -1,22 +1,24 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 // TODO: 在main.js引入
 
 let tableData = ref([]);
 
-axios
-  .get(
-    "https://restcountries.com/v3/all?fields=flag,name,cca2,cca3,altSpellings,idd"
-  )
-  .then(function (response) {
-    tableData.value = response.data;
-    console.log(response.data);
-  });
+onMounted(() => {
+  axios
+    .get(
+      "https://restcountries.com/v3/all?fields=flag,name,cca2,cca3,altSpellings,idd"
+    )
+    .then(function (response) {
+      tableData.value = response.data;
+      console.log(response.data);
+    });
+});
 </script>
 <template>
   <div class="container">
-    <table class="table">
+    <table class="table" v-show="tableData.length > 0">
       <thead>
         <th>國旗</th>
         <th>國家名稱</th>
