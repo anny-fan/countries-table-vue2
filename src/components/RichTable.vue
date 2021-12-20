@@ -25,8 +25,9 @@ export default {
   name: "RichTable",
   data() {
     return {
+      inputText: "",
       tableData: [],
-      filter: "",
+      filterText: "",
       moreInfo: "",
       sortDir: "asc",
       pageSize: 25,
@@ -39,7 +40,7 @@ export default {
         .filter((item) => {
           return item.name.official
             .toLowerCase()
-            .includes(this.filter.toLowerCase());
+            .includes(this.filterText.toLowerCase());
         })
         .sort((a, b) => {
           let modifier = 1;
@@ -58,7 +59,13 @@ export default {
       let start = (this.currentPage - 1) * this.pageSize;
       let end = this.currentPage * this.pageSize;
       console.log("aa", this.filteredList);
-      return this.filteredList.slice(start, end);
+      return this.filteredList.filter((row, index) => {
+        // console.log("index", index);
+        return index >= start && index < end;
+      });
+    },
+    totalPage() {
+      return Math.ceil(this.filteredList.length / this.pageSize);
     },
     isTableShow() {
       return this.tableData.length > 0;
@@ -76,6 +83,10 @@ export default {
     },
     sort: function () {
       this.sortDir = this.sortDir === "asc" ? "desc" : "asc";
+    },
+    filterData() {
+      this.currentPage = 1;
+      this.filterText = this.inputText;
     },
     nextPage() {
       if (this.currentPage * this.pageSize < this.filteredList.length)
@@ -108,9 +119,10 @@ export default {
             type="text"
             class="form-control"
             id="filter"
-            v-model.trim="filter"
+            v-model.trim="inputText"
             placeholder="Country Name..."
           />
+          <button @click="filterData()">filter</button>
         </div>
       </div>
     </div>
@@ -158,7 +170,14 @@ export default {
         <li class="page-item">
           <a class="page-link" @click="prevPage">Previous</a>
         </li>
-        <!-- <li class="page-item" v-for="page in "><a class="page-link" href="#">1</a></li> -->
+        <li
+          :class="{ active: page === currentPage }"
+          class="page-item"
+          v-for="(page, i) in totalPage"
+          :key="i"
+        >
+          <a class="page-link" href="#">{{ page }}</a>
+        </li>
         <li class="page-item">
           <a class="page-link" @click="nextPage">Next</a>
         </li>
