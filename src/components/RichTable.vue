@@ -95,6 +95,9 @@ export default {
     prevPage() {
       if (this.currentPage > 1) this.currentPage--;
     },
+    goToPage(page) {
+      this.currentPage = page;
+    },
   },
   created() {
     axios
@@ -111,18 +114,19 @@ export default {
 
 <template>
   <div class="container">
-    <div class="row mb-4">
+    <div class="mb-4">
       <div class="row col-4">
-        <label for="filter" class="col-2 col-form-label">filter:</label>
-        <div class="col-10">
-          <input
-            type="text"
-            class="form-control"
-            id="filter"
-            v-model.trim="inputText"
-            placeholder="Country Name..."
-          />
-          <button @click="filterData()">filter</button>
+        <input
+          type="text"
+          class="form-control col"
+          id="filter"
+          v-model.trim="inputText"
+          placeholder="Country Name..."
+        />
+        <div class="col-2">
+          <button type="button" class="btn btn-primary" @click="filterData()">
+            filter
+          </button>
         </div>
       </div>
     </div>
@@ -165,7 +169,7 @@ export default {
         </tr>
       </tbody>
     </table>
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation">
       <ul class="pagination">
         <li class="page-item">
           <a class="page-link" @click="prevPage">Previous</a>
@@ -175,8 +179,9 @@ export default {
           class="page-item"
           v-for="(page, i) in totalPage"
           :key="i"
+          @click="goToPage(page)"
         >
-          <a class="page-link" href="#">{{ page }}</a>
+          <a class="page-link">{{ page }}</a>
         </li>
         <li class="page-item">
           <a class="page-link" @click="nextPage">Next</a>
