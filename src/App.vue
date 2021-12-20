@@ -1,10 +1,22 @@
-<script setup>
+<!-- <script setup>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import RichTable from "./components/RichTable.vue";
+</script> -->
+
+<script>
+import RichTable from "./components/RichTable.vue";
+
+export default {
+  name: "App",
+  components: {
+    RichTable,
+  },
+};
 </script>
 
 <template>
+  <h2>Vue Countries Table</h2>
   <RichTable />
 </template>
 
