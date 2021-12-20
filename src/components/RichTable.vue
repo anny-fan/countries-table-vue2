@@ -25,43 +25,64 @@ export default {
   name: "RichTable",
   data() {
     return {
-      tableData: undefined,
-      filteredList: [],
+      tableData: [],
       filter: "",
       moreInfo: "",
       sortDir: "asc",
-      pageSize: 3,
+      pageSize: 25,
       currentPage: 1,
     };
   },
   computed: {
     filteredList() {
-      return this.tableData?.filter((item) => {
-        return item.name.official
-          .toLowerCase()
-          .includes(this.filter.toLowerCase());
-      });
+      return this.tableData
+        .filter((item) => {
+          return item.name.official
+            .toLowerCase()
+            .includes(this.filter.toLowerCase());
+        })
+        .sort((a, b) => {
+          let modifier = 1;
+          if (this.sortDir === "desc") modifier = -1;
+          if (a["name"].official < b["name"].official) return -1 * modifier;
+          if (a["name"].official > b["name"].official) return 1 * modifier;
+          return 0;
+        });
+      // .filter((row, index) => {
+      //   let start = (this.currentPage - 1) * this.pageSize;
+      //   let end = this.currentPage * this.pageSize;
+      //   if (index >= start && index < end) return true;
+      // });
+    },
+    pageData() {
+      let start = (this.currentPage - 1) * this.pageSize;
+      let end = this.currentPage * this.pageSize;
+      console.log("aa", this.filteredList);
+      return this.filteredList.slice(start, end);
+    },
+    isTableShow() {
+      return this.tableData.length > 0;
     },
   },
   methods: {
     // TODO: await/async
     showMoreInfo(country) {
+      this.moreInfo = "";
       axios
         .get("https://restcountries.com/v3.1/name/" + country.name.official)
         .then((response) => {
           this.moreInfo = response.data[0].region;
         });
     },
-    sort() {
+    sort: function () {
       this.sortDir = this.sortDir === "asc" ? "desc" : "asc";
-
-      this.tableData.sort((a, b) => {
-        let modifier = 1;
-        if (this.sortDir === "desc") modifier = -1;
-        if (a["name"].official < b["name"].official) return -1 * modifier;
-        if (a["name"].official > b["name"].official) return 1 * modifier;
-        return 0;
-      });
+    },
+    nextPage() {
+      if (this.currentPage * this.pageSize < this.filteredList.length)
+        this.currentPage++;
+    },
+    prevPage() {
+      if (this.currentPage > 1) this.currentPage--;
     },
   },
   created() {
@@ -93,8 +114,9 @@ export default {
         </div>
       </div>
     </div>
-    <table class="table" v-show="tableData">
+    <table class="table" v-show="isTableShow">
       <thead>
+        <th>序號</th>
         <th>國旗</th>
         <th class="sort" @click="sort()">
           國家名稱<i
@@ -113,7 +135,8 @@ export default {
         <th>國際電話區號</th>
       </thead>
       <tbody>
-        <tr v-for="(country, index) in filteredList" :key="index">
+        <tr v-for="(country, index) in pageData" :key="index">
+          <td>{{ pageSize * (currentPage - 1) + index + 1 }}</td>
           <td><img :src="country.flags[1]" alt="" width="40" /></td>
           <td
             data-bs-toggle="modal"
@@ -126,10 +149,21 @@ export default {
           <td>{{ country.cca3 }}</td>
           <td>{{ country.name.nativeName }}</td>
           <td>{{ country.altSpellings }}</td>
-          <td>{{ country.idd.root }}</td>
+          <td>{{ country.idd.root + country.idd.suffixes[0] }}</td>
         </tr>
       </tbody>
     </table>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" @click="prevPage">Previous</a>
+        </li>
+        <!-- <li class="page-item" v-for="page in "><a class="page-link" href="#">1</a></li> -->
+        <li class="page-item">
+          <a class="page-link" @click="nextPage">Next</a>
+        </li>
+      </ul>
+    </nav>
   </div>
 
   <div
@@ -172,5 +206,9 @@ thead {
   th.sort {
     cursor: pointer;
   }
+}
+.pagination {
+  cursor: pointer;
+  user-select: none;
 }
 </style>
