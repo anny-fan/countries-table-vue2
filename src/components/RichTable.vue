@@ -43,26 +43,28 @@ export default {
             .includes(this.filterText.toLowerCase());
         })
         .sort((a, b) => {
-          let modifier = 1;
-          if (this.sortDir === "desc") modifier = -1;
+          let modifier = this.sortDir === "desc" ? -1 : 1;
+          // if (this.sortDir === "desc") modifier = -1;
           if (a["name"].official < b["name"].official) return -1 * modifier;
           if (a["name"].official > b["name"].official) return 1 * modifier;
           return 0;
         });
+      // 不能在這裡切分頁，因為會修改到原始資料，就只會有當前第一頁的資料
       // .filter((row, index) => {
       //   let start = (this.currentPage - 1) * this.pageSize;
       //   let end = this.currentPage * this.pageSize;
       //   if (index >= start && index < end) return true;
-      // });
+      // })
     },
     pageData() {
       let start = (this.currentPage - 1) * this.pageSize;
       let end = this.currentPage * this.pageSize;
-      console.log("aa", this.filteredList);
-      return this.filteredList.filter((row, index) => {
-        // console.log("index", index);
-        return index >= start && index < end;
-      });
+      console.log("processed data", this.filteredList);
+      // return this.filteredList.filter((row, index) => {
+      //   // console.log("index", index);
+      //   return index >= start && index < end;
+      // });
+      return this.filteredList.slice(start, end);
     },
     totalPage() {
       return Math.ceil(this.filteredList.length / this.pageSize);
@@ -84,7 +86,7 @@ export default {
     sort: function () {
       this.sortDir = this.sortDir === "asc" ? "desc" : "asc";
     },
-    filterData() {
+    toFilterData() {
       this.currentPage = 1;
       this.filterText = this.inputText;
     },
@@ -105,7 +107,7 @@ export default {
         "https://restcountries.com/v3/all?fields=flags,name,cca2,cca3,altSpellings,idd"
       )
       .then((response) => {
-        console.log(response.data);
+        console.log("original data", response.data);
         this.tableData = response.data;
       });
   },
@@ -124,7 +126,7 @@ export default {
           placeholder="Country Name..."
         />
         <div class="col-2">
-          <button type="button" class="btn btn-primary" @click="filterData()">
+          <button type="button" class="btn btn-primary" @click="toFilterData()">
             filter
           </button>
         </div>
