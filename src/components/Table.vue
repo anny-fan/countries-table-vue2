@@ -3,15 +3,12 @@ export default {
   name: "Table",
   props: {
     data: Array,
+    countryToFilter: String,
   },
   data() {
     return {
-      inputText: "",
-      filterText: "",
       moreInfo: "",
       sortDir: "asc",
-      pageSize: 25,
-      currentPage: 1,
     };
   },
   computed: {
@@ -20,7 +17,7 @@ export default {
         .filter((item) => {
           return item.name.official
             .toLowerCase()
-            .includes(this.filterText.toLowerCase());
+            .includes(this.countryToFilter.toLowerCase());
         })
         .sort((a, b) => {
           let modifier = this.sortDir === "desc" ? -1 : 1;
@@ -45,29 +42,17 @@ export default {
       // });
       return this.filteredList.slice(start, end);
     },
-    totalPage() {
-      return Math.ceil(this.filteredList.length / this.pageSize);
-    },
     isTableShow() {
       return this.data.length > 0;
     },
   },
   methods: {
-    // TODO: await/async
     showMoreInfo(country) {
       this.moreInfo = "";
-      axios
-        .get("https://restcountries.com/v3.1/name/" + country.name.official)
-        .then((response) => {
-          this.moreInfo = response.data[0].region;
-        });
+      this.$emit("moreInfo", country);
     },
     sort: function () {
       this.sortDir = this.sortDir === "asc" ? "desc" : "asc";
-    },
-    toFilterData() {
-      this.currentPage = 1;
-      this.filterText = this.inputText;
     },
   },
 };
@@ -100,6 +85,7 @@ export default {
           data-bs-toggle="modal"
           data-bs-target="#moreInfoModal"
           @click="showMoreInfo(country)"
+          class="clickable"
         >
           {{ country.name.official }}
         </td>
@@ -118,10 +104,10 @@ thead {
   white-space: nowrap;
   th.sort {
     cursor: pointer;
+    user-select: none;
   }
 }
-.pagination {
+.clickable {
   cursor: pointer;
-  user-select: none;
 }
 </style>

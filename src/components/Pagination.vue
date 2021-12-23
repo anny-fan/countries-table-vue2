@@ -1,6 +1,9 @@
 <script>
 export default {
   name: "Pagination",
+  props: {
+    currentPage: Number,
+  },
   data() {
     return {
       inputText: "",
@@ -9,7 +12,6 @@ export default {
       moreInfo: "",
       sortDir: "asc",
       pageSize: 25,
-      currentPage: 1,
     };
   },
   computed: {

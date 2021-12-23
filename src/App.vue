@@ -14,7 +14,25 @@ export default {
   data() {
     return {
       tableData: [],
+      modalContent: "",
+      currentPage: 1,
+      filterText: "",
     };
+  },
+  methods: {
+    // TODO: await/async?
+    showInfo(country) {
+      this.modalContent = "";
+      axios
+        .get("https://restcountries.com/v3.1/name/" + country.name.official)
+        .then((response) => {
+          this.modalContent = response.data[0].region;
+        });
+    },
+    filterCountries(text) {
+      this.currentPage = 1;
+      this.filterText = text;
+    },
   },
   created() {
     axios
@@ -32,9 +50,13 @@ export default {
 <template>
   <h2>Vue Countries Table</h2>
   <div class="container">
-    <Filter></Filter>
-    <Table :data="tableData"></Table>
-    <Pagination></Pagination>
+    <Filter @filter="filterCountries"></Filter>
+    <Table
+      :data="tableData"
+      :countryToFilter="filterText"
+      @moreInfo="showInfo"
+    ></Table>
+    <Pagination :current-page="currentPage"></Pagination>
     <div
       class="modal fade"
       id="moreInfoModal"
@@ -58,7 +80,7 @@ export default {
               <table class="table align-middle">
                 <tbody>
                   <tr>
-                    <td>{{ moreInfo }}</td>
+                    <td>{{ modalContent }}</td>
                   </tr>
                 </tbody>
               </table>
