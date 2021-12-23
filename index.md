@@ -1,4 +1,4 @@
-## 使用vue2完成一個國家目錄
+## 使用 vue2 完成一個國家目錄
 
 [技術題目連結](https://docs.google.com/forms/d/e/1FAIpQLSfs4Gb8fX7wmywKvwr_56YL3UgjAvqwfgMY3ZxbxGjC8p0sHg/viewform)
 
@@ -18,3 +18,15 @@
    - 點擊國家名稱后顯示一個 Modal，裏面顯示該國家的其他資訊。
 3. 服務必須部署到 GitHub Pages，並保留完整的提交記錄。
 4. 若能使用任一前端框架(Vue/React/Angular)更好！
+
+### 第一階段: RichTable
+
+所有功能做在一起
+
+### 第二階段:
+
+細分三個 component
+
+- Filter
+- Table
+- Pagination
