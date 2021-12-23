@@ -1,37 +1,20 @@
-## Welcome to GitHub Pages
+## 使用vue2完成一個國家目錄
 
-You can use the [editor on GitHub](https://github.com/anny-fan/countries-table-vue3/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+[技術題目連結](https://docs.google.com/forms/d/e/1FAIpQLSfs4Gb8fX7wmywKvwr_56YL3UgjAvqwfgMY3ZxbxGjC8p0sHg/viewform)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/anny-fan/countries-table-vue3/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+1. 資料源使用免費的 API - https://restcountries.com/
+2. 需求
+   - 目錄必須顯示欄位,()内為 Api 資料物件的屬性
+     - 國旗(圖片資源請使用 flags 裡面的 PNG)
+     - 國家名稱（name.official）
+     - 2 位國家代碼(cca2)
+     - 3 位國家代碼(cca3)
+     - 母語名稱(name.nativeName.zho.official)
+     - 替代國家名稱(altSpellings)
+     - 國際電話區號(idd)
+   - 以國名搜尋功能(模糊搜尋)
+   - 以國名排序功能（正序、倒序）
+   - 分頁(每頁 25 筆)
+   - 點擊國家名稱后顯示一個 Modal，裏面顯示該國家的其他資訊。
+3. 服務必須部署到 GitHub Pages，並保留完整的提交記錄。
+4. 若能使用任一前端框架(Vue/React/Angular)更好！
