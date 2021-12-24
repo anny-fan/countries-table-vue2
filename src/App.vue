@@ -1,5 +1,6 @@
 <script>
 import axios from "axios";
+// import RichTable from "./components/RichTable.vue";
 import Table from "./components/Table.vue";
 import Filter from "./components/Filter.vue";
 import Pagination from "./components/Pagination.vue";
@@ -7,6 +8,7 @@ import Pagination from "./components/Pagination.vue";
 export default {
   name: "App",
   components: {
+    // RichTable,
     Table,
     Filter,
     Pagination,
@@ -17,7 +19,17 @@ export default {
       modalContent: "",
       currentPage: 1,
       filterText: "",
+      pageSize: 25,
     };
+  },
+  computed: {
+    filteredList() {
+      return this.tableData.filter((item) => {
+        return item.name.official
+          .toLowerCase()
+          .includes(this.filterText.toLowerCase());
+      });
+    },
   },
   methods: {
     // TODO: await/async?
@@ -32,6 +44,15 @@ export default {
     filterCountries(text) {
       this.currentPage = 1;
       this.filterText = text;
+    },
+    increaseCurrPage() {
+      this.currentPage++;
+    },
+    decreaseCurrPage() {
+      this.currentPage--;
+    },
+    changeCurrPage(page) {
+      this.currentPage = page;
     },
   },
   created() {
@@ -50,13 +71,23 @@ export default {
 <template>
   <h2>Vue Countries Table</h2>
   <div class="container">
+    <!-- <RichTable></RichTable> -->
     <Filter @filter="filterCountries"></Filter>
     <Table
-      :data="tableData"
+      :data="filteredList"
       :countryToFilter="filterText"
+      :current-page="currentPage"
+      :page-size="pageSize"
       @moreInfo="showInfo"
     ></Table>
-    <Pagination :current-page="currentPage"></Pagination>
+    <Pagination
+      :current-page="currentPage"
+      :data="filteredList"
+      :page-size="pageSize"
+      @next-page="increaseCurrPage"
+      @prev-page="decreaseCurrPage"
+      @go-to-page="changeCurrPage"
+    ></Pagination>
     <div
       class="modal fade"
       id="moreInfoModal"

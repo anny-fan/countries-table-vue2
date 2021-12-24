@@ -91,8 +91,7 @@ export default {
       this.filterText = this.inputText;
     },
     nextPage() {
-      if (this.currentPage * this.pageSize < this.filteredList.length)
-        this.currentPage++;
+      if (this.currentPage < this.totalPage) this.currentPage++;
     },
     prevPage() {
       if (this.currentPage > 1) this.currentPage--;

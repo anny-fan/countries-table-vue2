@@ -7,7 +7,6 @@ export default {
       filterText: "",
     };
   },
-  computed: {},
   methods: {
     filterData() {
       this.filterText = this.inputText;
@@ -26,9 +25,10 @@ export default {
         id="filter"
         v-model.trim="inputText"
         placeholder="Country Name..."
+        @keyup.enter="filterData"
       />
       <div class="col-2">
-        <button type="button" class="btn btn-primary" @click="filterData()">
+        <button type="button" class="btn btn-primary" @click="filterData">
           filter
         </button>
       </div>

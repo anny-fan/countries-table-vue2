@@ -3,7 +3,8 @@ export default {
   name: "Table",
   props: {
     data: Array,
-    countryToFilter: String,
+    currentPage: Number,
+    pageSize: Number,
   },
   data() {
     return {
@@ -12,35 +13,19 @@ export default {
     };
   },
   computed: {
-    filteredList() {
-      return this.data
-        .filter((item) => {
-          return item.name.official
-            .toLowerCase()
-            .includes(this.countryToFilter.toLowerCase());
-        })
-        .sort((a, b) => {
-          let modifier = this.sortDir === "desc" ? -1 : 1;
-          // if (this.sortDir === "desc") modifier = -1;
-          if (a["name"].official < b["name"].official) return -1 * modifier;
-          if (a["name"].official > b["name"].official) return 1 * modifier;
-          return 0;
-        });
-      // 不能在這裡切分頁，因為會修改到原始資料，就只會有當前第一頁的資料
-      // .filter((row, index) => {
-      //   let start = (this.currentPage - 1) * this.pageSize;
-      //   let end = this.currentPage * this.pageSize;
-      //   if (index >= start && index < end) return true;
-      // })
+    sortedList() {
+      return this.data.sort((a, b) => {
+        let modifier = this.sortDir === "desc" ? -1 : 1;
+        if (a["name"].official < b["name"].official) return -1 * modifier;
+        if (a["name"].official > b["name"].official) return 1 * modifier;
+        return 0;
+      });
     },
     pageData() {
       let start = (this.currentPage - 1) * this.pageSize;
       let end = this.currentPage * this.pageSize;
-      console.log("processed data", this.filteredList);
-      // return this.filteredList.filter((row, index) => {
-      //   return index >= start && index < end;
-      // });
-      return this.filteredList.slice(start, end);
+      console.log("processed data", this.sortedList);
+      return this.sortedList.slice(start, end);
     },
     isTableShow() {
       return this.data.length > 0;
