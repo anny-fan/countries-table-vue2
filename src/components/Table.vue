@@ -7,7 +7,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["moreInfo", "sortDir", "pageSize", "currentPage"]),
+    ...mapState(["sortDir", "pageSize", "currentPage"]),
     ...mapGetters(["pageData", "isTableShow"]),
   },
   methods: {

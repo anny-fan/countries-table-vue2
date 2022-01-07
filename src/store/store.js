@@ -8,7 +8,6 @@ const store = createStore({
     currentPage: 1,
     filterText: "",
     pageSize: 25,
-    moreInfo: "aa",
     sortDir: "asc",
     inputText: "",
     filterText: "",
@@ -89,7 +88,7 @@ const store = createStore({
         });
     },
     showMoreInfo({ commit, state }, payload) {
-      state.moreInfo = "";
+      state.modalContent = "";
       console.log(payload.country);
       axios
         .get(
