@@ -1,29 +1,17 @@
 <script>
+import { mapMutations, mapState, mapGetters } from "vuex";
+
 export default {
   name: "Pagination",
-  props: {
-    currentPage: Number,
-    data: Array,
-    pageSize: Number,
-  },
   data() {
     return {};
   },
   computed: {
-    totalPage() {
-      return Math.ceil(this.data.length / this.pageSize);
-    },
+    ...mapState(["currentPage"]),
+    ...mapGetters(["totalPage"]),
   },
   methods: {
-    nextPage() {
-      if (this.currentPage < this.totalPage) this.$emit("next-page");
-    },
-    prevPage() {
-      if (this.currentPage > 1) this.$emit("prev-page");
-    },
-    goToPage(page) {
-      this.$emit("goToPage", page);
-    },
+    ...mapMutations(["nextPage", "prevPage", "goToPage"]),
   },
 };
 </script>

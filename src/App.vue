@@ -1,69 +1,31 @@
 <script>
-import axios from "axios";
-// import RichTable from "./components/RichTable.vue";
 import Table from "./components/Table.vue";
 import Filter from "./components/Filter.vue";
 import Pagination from "./components/Pagination.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "App",
   components: {
-    // RichTable,
     Table,
     Filter,
     Pagination,
   },
   data() {
-    return {
-      tableData: [],
-      modalContent: "",
-      currentPage: 1,
-      filterText: "",
-      pageSize: 25,
-    };
+    return {};
   },
   computed: {
-    filteredList() {
-      return this.tableData.filter((item) => {
-        return item.name.official
-          .toLowerCase()
-          .includes(this.filterText.toLowerCase());
-      });
-    },
+    ...mapState([
+      "tableData",
+      "modalContent",
+      "currentPage",
+      "filterText",
+      "pageSize",
+    ]),
   },
-  methods: {
-    // TODO: await/async?
-    showInfo(country) {
-      this.modalContent = "";
-      axios
-        .get("https://restcountries.com/v3.1/name/" + country.name.official)
-        .then((response) => {
-          this.modalContent = response.data[0].region;
-        });
-    },
-    filterCountries(text) {
-      this.currentPage = 1;
-      this.filterText = text;
-    },
-    increaseCurrPage() {
-      this.currentPage++;
-    },
-    decreaseCurrPage() {
-      this.currentPage--;
-    },
-    changeCurrPage(page) {
-      this.currentPage = page;
-    },
-  },
+  methods: {},
   created() {
-    axios
-      .get(
-        "https://restcountries.com/v3/all?fields=flags,name,cca2,cca3,altSpellings,idd"
-      )
-      .then((response) => {
-        console.log("original data", response.data);
-        this.tableData = response.data;
-      });
+    this.$store.dispatch("getTableData");
   },
 };
 </script>
@@ -71,23 +33,9 @@ export default {
 <template>
   <h2>Vue Countries Table</h2>
   <div class="container">
-    <!-- <RichTable></RichTable> -->
-    <Filter @filter="filterCountries"></Filter>
-    <Table
-      :data="filteredList"
-      :countryToFilter="filterText"
-      :current-page="currentPage"
-      :page-size="pageSize"
-      @moreInfo="showInfo"
-    ></Table>
-    <Pagination
-      :current-page="currentPage"
-      :data="filteredList"
-      :page-size="pageSize"
-      @next-page="increaseCurrPage"
-      @prev-page="decreaseCurrPage"
-      @go-to-page="changeCurrPage"
-    ></Pagination>
+    <Filter></Filter>
+    <Table></Table>
+    <Pagination></Pagination>
     <div
       class="modal fade"
       id="moreInfoModal"

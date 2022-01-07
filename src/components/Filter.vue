@@ -1,16 +1,18 @@
 <script>
+import { mapState, mapMutations } from "vuex";
+
 export default {
   name: "Filter",
   data() {
-    return {
-      inputText: "",
-      filterText: "",
-    };
+    return {};
+  },
+  computed: {
+    ...mapState(["inputText", "filterText"]),
   },
   methods: {
-    filterData() {
-      this.filterText = this.inputText;
-      this.$emit("filter", this.filterText);
+    ...mapMutations(["filterData"]),
+    updateInputText(e) {
+      this.$store.commit("updateInputText", e.target.value);
     },
   },
 };
@@ -23,7 +25,7 @@ export default {
         type="text"
         class="form-control col"
         id="filter"
-        v-model.trim="inputText"
+        @input="updateInputText"
         placeholder="Country Name..."
         @keyup.enter="filterData"
       />

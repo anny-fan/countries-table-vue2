@@ -1,43 +1,22 @@
 <script>
+import { mapState, mapGetters, mapMutations } from "vuex";
+
 export default {
   name: "Table",
-  props: {
-    data: Array,
-    currentPage: Number,
-    pageSize: Number,
-  },
   data() {
-    return {
-      moreInfo: "",
-      sortDir: "asc",
-    };
+    return {};
   },
   computed: {
-    sortedList() {
-      return this.data.sort((a, b) => {
-        let modifier = this.sortDir === "desc" ? -1 : 1;
-        if (a["name"].official < b["name"].official) return -1 * modifier;
-        if (a["name"].official > b["name"].official) return 1 * modifier;
-        return 0;
-      });
-    },
-    pageData() {
-      let start = (this.currentPage - 1) * this.pageSize;
-      let end = this.currentPage * this.pageSize;
-      console.log("processed data", this.sortedList);
-      return this.sortedList.slice(start, end);
-    },
-    isTableShow() {
-      return this.data.length > 0;
-    },
+    ...mapState(["moreInfo", "sortDir", "pageSize", "currentPage"]),
+    ...mapGetters(["pageData", "isTableShow"]),
   },
   methods: {
-    showMoreInfo(country) {
-      this.moreInfo = "";
-      this.$emit("moreInfo", country);
-    },
-    sort: function () {
-      this.sortDir = this.sortDir === "asc" ? "desc" : "asc";
+    ...mapMutations(["sort"]),
+    showMoreInfoByRow(country) {
+      this.$store.dispatch({
+        type: "showMoreInfo",
+        country: country,
+      });
     },
   },
 };
@@ -69,7 +48,7 @@ export default {
         <td
           data-bs-toggle="modal"
           data-bs-target="#moreInfoModal"
-          @click="showMoreInfo(country)"
+          @click="showMoreInfoByRow(country)"
           class="clickable"
         >
           {{ country.name.official }}
