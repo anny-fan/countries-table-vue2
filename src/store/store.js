@@ -10,7 +10,6 @@ const store = createStore({
     pageSize: 25,
     sortDir: "asc",
     inputText: "",
-    filterText: "",
   },
   getters: {
     filteredList: (state) => {
